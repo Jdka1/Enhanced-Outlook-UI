@@ -1,14 +1,12 @@
 const defaults = {
   enabled: true,
   nativePinch: true,
-  blockHorizontalScroll: true,
-  archiveLabel: true
+  archiveButton: true
 };
 const enabled = document.querySelector('#enabled');
 const features = document.querySelector('#features');
 const nativePinch = document.querySelector('#native-pinch');
-const blockHorizontalScroll = document.querySelector('#block-horizontal-scroll');
-const archiveLabel = document.querySelector('#archive-label');
+const archiveButton = document.querySelector('#archive-button');
 
 function setFeatureAvailability(isEnabled) {
   features.disabled = !isEnabled;
@@ -17,8 +15,7 @@ function setFeatureAvailability(isEnabled) {
 chrome.storage.sync.get(defaults, (settings) => {
   enabled.checked = settings.enabled;
   nativePinch.checked = settings.nativePinch;
-  blockHorizontalScroll.checked = settings.blockHorizontalScroll;
-  archiveLabel.checked = settings.archiveLabel;
+  archiveButton.checked = settings.archiveButton;
   setFeatureAvailability(settings.enabled);
 });
 
@@ -31,10 +28,6 @@ nativePinch.addEventListener('change', () => {
   chrome.storage.sync.set({ nativePinch: nativePinch.checked });
 });
 
-blockHorizontalScroll.addEventListener('change', () => {
-  chrome.storage.sync.set({ blockHorizontalScroll: blockHorizontalScroll.checked });
-});
-
-archiveLabel.addEventListener('change', () => {
-  chrome.storage.sync.set({ archiveLabel: archiveLabel.checked });
+archiveButton.addEventListener('change', () => {
+  chrome.storage.sync.set({ archiveButton: archiveButton.checked });
 });

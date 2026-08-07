@@ -1,20 +1,13 @@
 /*
- * Outlook's command labels are localized in its visual markup, but the
- * accessible Archive name remains the most stable hook across UI refreshes.
- * Target buttons and role=button controls only, avoiding archive links in
- * message content.
+ * The accessible Archive name is the most stable hook across Outlook UI
+ * refreshes. Target buttons and role=button controls only, avoiding archive
+ * links in message content. Do not add a text label: Outlook may already
+ * render one, and duplicating it creates an "Archive Archive" button.
  */
-html[data-better-outlook-archive-label="true"] button[aria-label^="Archive"],
-html[data-better-outlook-archive-label="true"] [role="button"][aria-label^="Archive"] {
+html[data-enhanced-outlook-archive-button="true"] button[aria-label^="Archive"],
+html[data-enhanced-outlook-archive-button="true"] [role="button"][aria-label^="Archive"] {
   gap: 7px !important;
   inline-size: auto !important;
   min-inline-size: 96px !important;
   padding-inline: 10px !important;
-}
-
-html[data-better-outlook-archive-label="true"] button[aria-label^="Archive"]::after,
-html[data-better-outlook-archive-label="true"] [role="button"][aria-label^="Archive"]::after {
-  content: "Archive";
-  font: inherit;
-  white-space: nowrap;
 }

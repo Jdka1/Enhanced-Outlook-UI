@@ -3,8 +3,8 @@
 ## Changes this extension makes
 
 1. Restores Chrome’s normal page pinch zoom in Outlook.
-2. Blocks sideways scrolling anywhere in an open email pane.
-3. Makes the Archive button wider and adds an **Archive** label.
+2. Keeps normal sideways scrolling available when the page is zoomed in.
+3. Makes the Archive button easier to use with a wider hit area.
 4. Adds saved popup toggles for every feature and the extension as a whole.
 
 The extension runs only on `outlook.office.com` and `outlook.cloud.microsoft`. It requests only extension storage for saving the on/off setting; it does not send email data anywhere.

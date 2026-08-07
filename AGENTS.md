@@ -18,28 +18,25 @@ The extension now restores the interaction the user actually wants: pinching in 
    - Native Chrome zoom affects the whole Outlook tab: subject, sender, message frame, message content, and surrounding Outlook UI. This is intentional and is the behavior the user approved.
    - A physical Control + mouse-wheel over Outlook is treated the same as a trackpad pinch. This is an unavoidable consequence of Chrome's event model.
 
-2. **No horizontal scrolling in the open-email pane**
-   - Non-pinch `wheel` events whose primary movement is horizontal (`abs(deltaX) > abs(deltaY)`) are canceled anywhere in the open-message reading pane: the subject, sender/header, controls, and rendered email body.
-   - The pane is found from Outlook's semantic `role="document"` email body and its nearest scrollable ancestor/wrapper; same-origin child frames are also handled by treating their `document.body` as the email body.
-   - Vertical scrolling and predominantly vertical/diagonal scrolling remain untouched.
-   - Do not broaden this guard to all Outlook elements: the user only requested horizontal-scroll suppression within the open email pane, not in message lists or other Outlook surfaces.
+2. **Normal horizontal scrolling**
+   - Do not intercept ordinary non-pinch `wheel` events. When native page zoom makes Outlook wider than its viewport, two-finger horizontal scrolling must remain available to pan around the page.
 
-3. **Archive command label**
-   - `outlook.css` makes accessible Archive buttons wider and appends a visible `Archive` label.
+3. **Archive button size**
+   - `outlook.css` makes accessible Archive buttons wider, without injecting a text label. Outlook may already render its own label; injecting another causes duplicate `Archive Archive` text.
    - It targets `button[aria-label^="Archive"]` and `[role="button"][aria-label^="Archive"]`, avoiding volatile Outlook CSS classes.
    - The CSS applies automatically to elements Outlook adds/replaces in its single-page app; no mutation observer is needed.
 
 4. **Popup**
-   - The popup has a master persistent on/off switch plus independent saved toggles for native pinch zoom, horizontal-scroll blocking, and the Archive command label.
-   - State is stored in `chrome.storage.sync` as `{ enabled, nativePinch, blockHorizontalScroll, archiveLabel }`, all defaulting to `true`.
-   - When disabled, the content script leaves Outlook's normal pinch and horizontal-scroll behavior intact and removes the Archive styling. Individual feature toggles affect only their named behavior.
+   - The popup has a master persistent on/off switch plus independent saved toggles for native pinch zoom and the wider Archive button.
+   - State is stored in `chrome.storage.sync` as `{ enabled, nativePinch, archiveButton }`, all defaulting to `true`.
+   - When disabled, the content script leaves Outlook's normal pinch behavior intact and removes the Archive styling. Individual feature toggles affect only their named behavior.
 
 ## Project layout
 
 | Path | Responsibility |
 | --- | --- |
 | `manifest.json` | MV3 manifest, Outlook-only host matches, content stylesheet/script, popup registration. |
-| `src/content/content.js` | Native-pinch pass-through and email-body horizontal-wheel suppression. Keep it free of UI styling. |
+| `src/content/content.js` | Native-pinch pass-through. Keep it free of UI styling. |
 | `src/styles/outlook.css` | Small Outlook visual customizations, currently the Archive command. |
 | `src/popup/` | Popup HTML, CSS, and JavaScript for the enabled-state controls. |
 | `README.md` | User-facing installation, testing, feature-request, and constraint documentation. Update it with user-visible behavior changes. |
@@ -63,9 +60,8 @@ For the current desired behavior, do not call `preventDefault()` in the `ctrlKey
 
 ### Preserve normal gestures
 
-- Never cancel ordinary vertical `wheel` events.
+- Never cancel ordinary non-pinch `wheel` events. This includes horizontal scrolling needed to pan a zoomed-in page.
 - Do not cancel `ctrlKey` pinch events with `preventDefault()`.
-- Keep horizontal-scroll blocking limited to the open-message pane, as identified from semantic accessibility roles and its scroll wrapper, or same-origin child-frame bodies.
 
 ### Outlook is a single-page app
 
@@ -92,16 +88,16 @@ Accessibility attributes such as `aria-label` and `role` are intentionally prefe
 
 - Pinch anywhere in Outlook: Chrome's native page zoom occurs; Outlook does not apply its aggressive message-only zoom.
 - Two-finger vertical scrolling in an email and in the message list still works normally.
-- Predominantly horizontal trackpad swipes anywhere in the open email pane do not scroll it sideways.
+- When zoomed in, horizontal trackpad scrolling can pan around the email normally.
 - The popup switch disables all extension interception after the Outlook tab is reloaded.
-- The Archive command is visibly wider and reads `Archive` in English Outlook Web.
+- The Archive command is visibly wider without a duplicate label in English Outlook Web.
 - Other toolbar buttons remain unaffected.
 
 ## Known limitations
 
 - The extension cannot independently set native Chrome pinch sensitivity or Chrome's zoom range. Those are browser-controlled. The former custom sensitivity slider was deliberately removed when the product direction changed to native zoom.
 - Native page zoom affects all of Outlook, not only the message body. This is intentional and matches the user's approved "like browsing Google" behavior.
-- The Archive label selector is English-specific and depends on Outlook retaining an accessible `aria-label` beginning with `Archive`.
+- The Archive button selector is English-specific and depends on Outlook retaining an accessible `aria-label` beginning with `Archive`.
 - There is no automated browser test setup. Validate syntax/manifest statically and perform the manual acceptance checklist in Chrome.
 
 ## Documentation and issue intake
