@@ -1,0 +1,52 @@
+:root {
+  color-scheme: light dark;
+  font: 13px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 250px;
+}
+
+main {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.switch-row {
+  align-items: center;
+  display: flex;
+  font-weight: 600;
+  justify-content: space-between;
+}
+
+input[type="checkbox"] {
+  block-size: 18px;
+  inline-size: 18px;
+}
+
+fieldset {
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 10px;
+}
+
+legend {
+  padding-inline: 4px;
+}
+
+#hint {
+  color: #666;
+  font-size: 12px;
+  margin: 0;
+}
+
+body:has(#enabled:not(:checked)) #features,
+body:has(#enabled:not(:checked)) #hint {
+  opacity: .5;
+}

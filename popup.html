@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="popup.css">
+    <title>Better Outlook Zoom</title>
+  </head>
+  <body>
+    <main>
+      <label class="switch-row" for="enabled">
+        <span>Extension enabled</span>
+        <input id="enabled" type="checkbox" role="switch" checked>
+      </label>
+
+      <fieldset id="features">
+        <legend>Features</legend>
+        <label class="switch-row" for="native-pinch">
+          <span>Native pinch zoom</span>
+          <input id="native-pinch" type="checkbox" role="switch" checked>
+        </label>
+        <label class="switch-row" for="block-horizontal-scroll">
+          <span>Block sideways scroll</span>
+          <input id="block-horizontal-scroll" type="checkbox" role="switch" checked>
+        </label>
+        <label class="switch-row" for="archive-label">
+          <span>Archive button label</span>
+          <input id="archive-label" type="checkbox" role="switch" checked>
+        </label>
+      </fieldset>
+
+      <p id="hint">Changes apply immediately in open Outlook tabs.</p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
