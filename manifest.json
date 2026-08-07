@@ -2,14 +2,14 @@
   "manifest_version": 3,
   "name": "Better Outlook Zoom",
   "version": "0.1.0",
-  "description": "Smooth, pointer-centered pinch zoom for Outlook on the web messages.",
+  "description": "Restores native page pinch zoom and improves reading controls in Outlook on the web.",
   "permissions": ["storage"],
   "host_permissions": [
     "https://outlook.office.com/*",
     "https://outlook.cloud.microsoft/*"
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_title": "Better Outlook Zoom"
   },
   "content_scripts": [
@@ -18,8 +18,8 @@
         "https://outlook.office.com/*",
         "https://outlook.cloud.microsoft/*"
       ],
-      "css": ["outlook.css"],
-      "js": ["content.js"],
+      "css": ["src/styles/outlook.css"],
+      "js": ["src/content/content.js"],
       "run_at": "document_start",
       "all_frames": true,
       "match_about_blank": true

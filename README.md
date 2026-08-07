@@ -24,13 +24,24 @@ A small Chrome extension for Microsoft 365 Outlook on the web. It makes Outlook 
 
 The extension runs only on `outlook.office.com` and `outlook.cloud.microsoft`. It requests only extension storage for saving the on/off setting; it does not send email data anywhere.
 
+## Project structure
+
+```text
+manifest.json       Chrome extension configuration
+src/content/        Outlook gesture handling
+src/styles/         Outlook-specific visual styling
+src/popup/          Extension toolbar popup
+README.md           User guide
+AGENTS.md           Development notes for future contributors
+```
+
 ## Install locally in Chrome
 
 1. Download or clone this repository to a folder on your Mac.
 2. Open Chrome and visit `chrome://extensions`.
 3. Enable **Developer mode** in the top-right corner.
 4. Click **Load unpacked**.
-5. Select the folder containing this repository's `manifest.json` file.
+5. Select this repository's top-level folder (the folder containing `manifest.json`).
 6. Open or reload Microsoft 365 Outlook Web (`outlook.office.com` or `outlook.cloud.microsoft`).
 7. Pinch anywhere in Outlook to use Chrome's normal page zoom. Click the extension icon to toggle the features on or off.
 

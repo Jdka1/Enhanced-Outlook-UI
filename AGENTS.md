@@ -39,10 +39,11 @@ The extension now restores the interaction the user actually wants: pinching in 
 | Path | Responsibility |
 | --- | --- |
 | `manifest.json` | MV3 manifest, Outlook-only host matches, content stylesheet/script, popup registration. |
-| `content.js` | Native-pinch pass-through and email-body horizontal-wheel suppression. Keep it free of UI styling. |
-| `outlook.css` | Small Outlook visual customizations, currently the Archive command. |
-| `popup.html` / `popup.css` / `popup.js` | Minimal enabled-state control. |
+| `src/content/content.js` | Native-pinch pass-through and email-body horizontal-wheel suppression. Keep it free of UI styling. |
+| `src/styles/outlook.css` | Small Outlook visual customizations, currently the Archive command. |
+| `src/popup/` | Popup HTML, CSS, and JavaScript for the enabled-state controls. |
 | `README.md` | User-facing installation, testing, feature-request, and constraint documentation. Update it with user-visible behavior changes. |
+| `AGENTS.md` | This implementation and maintenance guide for future agent sessions. |
 
 ## Scope and permissions
 
@@ -74,17 +75,17 @@ Accessibility attributes such as `aria-label` and `role` are intentionally prefe
 
 ## Development workflow
 
-1. Edit files in the project root; keep the extension dependency-free and plain HTML/CSS/JavaScript.
+1. Edit the feature files under `src/`; keep the extension dependency-free and plain HTML/CSS/JavaScript. Keep `manifest.json`, `README.md`, and this guide at the project root.
 2. Validate without mutation:
 
    ```sh
-   node --check content.js
-   node --check popup.js
+   node --check src/content/content.js
+   node --check src/popup/popup.js
    node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8')); console.log('Manifest valid')"
    ```
 
 3. In Chrome, open `chrome://extensions`, enable Developer mode, and click the reload icon for this unpacked extension.
-4. Reload the Outlook tab after any `content.js` or `outlook.css` change. Existing content scripts/styles may otherwise remain from the prior version.
+4. Reload the Outlook tab after any `src/content/content.js` or `src/styles/outlook.css` change. Existing content scripts/styles may otherwise remain from the prior version.
 5. Test with a real opened email, ideally both a simple text email and a formatted HTML email.
 
 ## Manual acceptance checklist
