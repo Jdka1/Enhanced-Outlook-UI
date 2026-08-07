@@ -1,4 +1,4 @@
-# Better Outlook Zoom — Agent Guide
+# Enhanced Outlook UI — Agent Guide
 
 ## Project purpose
 
