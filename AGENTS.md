@@ -22,13 +22,19 @@ The extension now restores the interaction the user actually wants: pinching in 
    - Do not intercept ordinary non-pinch `wheel` events. When native page zoom makes Outlook wider than its viewport, two-finger horizontal scrolling must remain available to pan around the page.
 
 3. **Archive button size**
-   - `outlook.css` makes accessible Archive buttons wider, without injecting a text label. Outlook may already render its own label; injecting another causes duplicate `Archive Archive` text.
-   - It targets `button[aria-label^="Archive"]` and `[role="button"][aria-label^="Archive"]`, avoiding volatile Outlook CSS classes.
-   - The CSS applies automatically to elements Outlook adds/replaces in its single-page app; no mutation observer is needed.
+   - `outlook.css` makes accessible Archive buttons wider. `content.js` adds one real label element to icon-only Archive controls; controls that already have visible text retain Outlook's label without duplication. A real element is required because Outlook can clip CSS pseudo-elements inside its toolbar.
+   - Outlook's Ribbon Archive button includes an invisible `.acui-hidden-content` description. Do not count it as a visible label; only direct visible label elements prevent injection. Target the Ribbon button's stable automation/`label` attributes first, with accessible-name fallbacks.
+   - A lightweight mutation observer handles toolbar controls Outlook adds/replaces in its single-page app.
 
-4. **Popup**
-   - The popup has a master persistent on/off switch plus independent saved toggles for native pinch zoom and the wider Archive button.
-   - State is stored in `chrome.storage.sync` as `{ enabled, nativePinch, archiveButton }`, all defaulting to `true`.
+4. **Email size controls**
+   - `−` and `+` controls appear in the top-right of an open email and scale its rendered content between 80% and 160% in 10% steps. The `=` and `-` keys invoke the same actions; numeric keypad `+`/`−` work too.
+   - The control targets Outlook's semantic `role="document"` content area, preserving the message header and Outlook chrome. The scale resets when Outlook replaces the email content element.
+   - Keyboard shortcuts apply only while an email is open, have no modifier keys, and are ignored in inputs, textareas, selects, and contenteditable elements so searching and composing keep their normal typing behavior.
+   - This feature is an explicit exception to the normal no-`zoom` rule: it is a user-requested manual content-size control, not an attempt to emulate trackpad pinch zoom.
+
+5. **Popup**
+   - The popup has a master persistent on/off switch plus independent saved toggles for native pinch zoom, the wider Archive button, and email size controls.
+   - State is stored in `chrome.storage.sync` as `{ enabled, nativePinch, archiveButton, emailSizeControls }`, all defaulting to `true`.
    - When disabled, the content script leaves Outlook's normal pinch behavior intact and removes the Archive styling. Individual feature toggles affect only their named behavior.
 
 ## Project layout
@@ -36,8 +42,9 @@ The extension now restores the interaction the user actually wants: pinching in 
 | Path | Responsibility |
 | --- | --- |
 | `manifest.json` | MV3 manifest, Outlook-only host matches, content stylesheet/script, popup registration. |
-| `src/content/content.js` | Native-pinch pass-through. Keep it free of UI styling. |
-| `src/styles/outlook.css` | Small Outlook visual customizations, currently the Archive command. |
+| `src/assets/` | Extension artwork: cardinal-red `icon.svg` source plus PNG sizes Chrome loads in the toolbar and Extensions page. |
+| `src/content/content.js` | Native-pinch pass-through, Archive-label detection, and email size controls. |
+| `src/styles/outlook.css` | Small Outlook visual customizations: Archive command and email size controls. |
 | `src/popup/` | Popup HTML, CSS, and JavaScript for the enabled-state controls. |
 | `README.md` | User-facing installation, testing, feature-request, and constraint documentation. Update it with user-visible behavior changes. |
 | `AGENTS.md` | This implementation and maintenance guide for future agent sessions. |
@@ -80,6 +87,8 @@ Accessibility attributes such as `aria-label` and `role` are intentionally prefe
    node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8')); console.log('Manifest valid')"
    ```
 
+   The icon source is `src/assets/icon.svg`. When editing it, regenerate the four PNG files with macOS `sips` before reloading the extension.
+
 3. In Chrome, open `chrome://extensions`, enable Developer mode, and click the reload icon for this unpacked extension.
 4. Reload the Outlook tab after any `src/content/content.js` or `src/styles/outlook.css` change. Existing content scripts/styles may otherwise remain from the prior version.
 5. Test with a real opened email, ideally both a simple text email and a formatted HTML email.
@@ -90,7 +99,8 @@ Accessibility attributes such as `aria-label` and `role` are intentionally prefe
 - Two-finger vertical scrolling in an email and in the message list still works normally.
 - When zoomed in, horizontal trackpad scrolling can pan around the email normally.
 - The popup switch disables all extension interception after the Outlook tab is reloaded.
-- The Archive command is visibly wider without a duplicate label in English Outlook Web.
+- The Archive command is visibly wider and has exactly one label in English Outlook Web.
+- In an open email, the `−`/`+` controls and `=`/`-` keyboard shortcuts scale the email content and not Outlook's surrounding controls.
 - Other toolbar buttons remain unaffected.
 
 ## Known limitations

@@ -3,6 +3,12 @@
   "name": "Enhanced Outlook UI",
   "version": "0.1.0",
   "description": "Restores native page pinch zoom and improves reading controls in Outlook on the web.",
+  "icons": {
+    "16": "src/assets/icon-16.png",
+    "32": "src/assets/icon-32.png",
+    "48": "src/assets/icon-48.png",
+    "128": "src/assets/icon-128.png"
+  },
   "permissions": ["storage"],
   "host_permissions": [
     "https://outlook.office.com/*",
@@ -10,7 +16,13 @@
   ],
   "action": {
     "default_popup": "src/popup/popup.html",
-    "default_title": "Enhanced Outlook UI"
+    "default_title": "Enhanced Outlook UI",
+    "default_icon": {
+      "16": "src/assets/icon-16.png",
+      "32": "src/assets/icon-32.png",
+      "48": "src/assets/icon-48.png",
+      "128": "src/assets/icon-128.png"
+    }
   },
   "content_scripts": [
     {

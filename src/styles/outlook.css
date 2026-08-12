@@ -1,13 +1,78 @@
 /*
  * The accessible Archive name is the most stable hook across Outlook UI
  * refreshes. Target buttons and role=button controls only, avoiding archive
- * links in message content. Do not add a text label: Outlook may already
- * render one, and duplicating it creates an "Archive Archive" button.
+ * links in message content. content.js adds a label only when Outlook does
+ * not render one itself, preventing an "Archive Archive" button.
  */
 html[data-enhanced-outlook-archive-button="true"] button[aria-label^="Archive"],
-html[data-enhanced-outlook-archive-button="true"] [role="button"][aria-label^="Archive"] {
+html[data-enhanced-outlook-archive-button="true"] button[data-automation-type="RibbonButton"][label="Archive"],
+html[data-enhanced-outlook-archive-button="true"] button[dataautomationtype="RibbonButton"][label="Archive"],
+html[data-enhanced-outlook-archive-button="true"] [role="button"][aria-label^="Archive"],
+html[data-enhanced-outlook-archive-button="true"] button[title^="Archive"],
+html[data-enhanced-outlook-archive-button="true"] [role="button"][title^="Archive"],
+html[data-enhanced-outlook-archive-button="true"] button:has([aria-label^="Archive"]),
+html[data-enhanced-outlook-archive-button="true"] [role="button"]:has([aria-label^="Archive"]),
+html[data-enhanced-outlook-archive-button="true"] button:has([data-icon-name="Archive"]),
+html[data-enhanced-outlook-archive-button="true"] [role="button"]:has([data-icon-name="Archive"]) {
   gap: 7px !important;
   inline-size: auto !important;
   min-inline-size: 96px !important;
   padding-inline: 10px !important;
+}
+
+html[data-enhanced-outlook-archive-button="true"] .enhanced-outlook-archive-label {
+  align-self: center;
+  display: inline !important;
+  font: inherit;
+  line-height: inherit;
+  margin-inline-start: 7px;
+  white-space: nowrap;
+}
+
+[data-enhanced-outlook-email-scaled="true"] {
+  zoom: var(--enhanced-outlook-email-scale);
+}
+
+.enhanced-outlook-email-size-controls {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 18px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  position: fixed;
+  right: 22px;
+  top: 104px;
+  z-index: 2147483647;
+}
+
+.enhanced-outlook-email-size-controls button {
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  color: #333;
+  cursor: pointer;
+  font-size: 20px;
+  height: 28px;
+  line-height: 1;
+  padding: 0;
+  width: 28px;
+}
+
+.enhanced-outlook-email-size-controls button:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.enhanced-outlook-email-size-controls button:disabled {
+  color: #aaa;
+  cursor: default;
+}
+
+.enhanced-outlook-email-size-controls span {
+  color: #555;
+  font: 12px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-width: 34px;
+  text-align: center;
 }
