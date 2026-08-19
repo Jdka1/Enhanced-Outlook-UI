@@ -1,5 +1,7 @@
 # Enhanced Outlook UI
 
+Made since Stanford uses Microsoft/Outlook for all student emails.
+
 ## Changes this extension makes
 
 1. Restores Chrome’s normal page pinch zoom in Outlook.
